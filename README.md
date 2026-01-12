@@ -10,8 +10,10 @@ A sleek, modern web tool designed to help you collect images and extract precise
 - **Smart Scaling**: Automatically maps every click to a fixed **1920x1080** resolution, ensuring consistent coordinates regardless of your screen size or browser zoom level.
 - **Instant Copy**: Click any point on an image to copy the `X, Y` coordinates directly to your clipboard.
 - **Visual Feedback**:
+  
   - **Ripple Effect**: Subtle animations at the point of contact to confirm your selection.
   - **Toast Notifications**: Modern status alerts to confirm successful copying.
+
 - **Premium Aesthetics**: A responsive, dark-mode interface featuring glassmorphism effects, smooth transitions, and high-quality typography.
 
 ## 🛠️ How It Works
