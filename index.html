@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImgCoords - Visual Coordinate Collector</title>
+    <meta name="description" content="Click any image to copy its precise coordinates to your clipboard instantly.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ImgCoords</h1>
+            <p class="subtitle">Scaled to 1920x1080 coordinates • Click to copy</p>
+        </header>
+
+        <section class="upload-section">
+            <div class="upload-controls">
+                <input type="text" id="image-url" placeholder="Paste image URL here...">
+                <div class="file-input-wrapper">
+                    <button>
+                        <i data-lucide="upload"></i> Upload
+                    </button>
+                    <input type="file" id="file-upload" accept="image/*">
+                </div>
+                <button id="add-url-btn">
+                    <i data-lucide="link"></i> Add URL
+                </button>
+
+            </div>
+        </section>
+
+        <main id="gallery">
+            <!-- Empty state shows by default -->
+            <div class="empty-state" id="empty-state">
+                <i data-lucide="image-plus"></i>
+                <p>Add some images to get started</p>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast" class="toast">
+        Coordinates copied!
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
