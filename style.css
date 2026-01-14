@@ -140,20 +140,20 @@ button:hover {
 }
 
 .image-card {
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    overflow: hidden;
-    border: 1px solid var(--glass-border);
+    background: transparent;
+    border-radius: 0;
+    overflow: visible;
+    border: none;
     transition: var(--transition);
     position: relative;
     width: 100%;
     max-width: 1920px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: none;
 }
 
 .image-card:hover {
-    border-color: var(--primary);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    border-color: transparent;
+    box-shadow: none;
 }
 
 .image-card img {
@@ -161,6 +161,9 @@ button:hover {
     height: auto;
     display: block;
     cursor: crosshair;
+    margin: 0;
+    padding: 0;
+    border: none;
 }
 
 .image-card .card-info {

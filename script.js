@@ -88,6 +88,17 @@ function handleImageClick(e) {
     const scaledX = Math.round((naturalX / naturalWidth) * TARGET_WIDTH);
     const scaledY = Math.round((naturalY / naturalHeight) * TARGET_HEIGHT);
 
+    // DEBUG LOGGING
+    console.group('🎯 Coordinate Calculation Debug');
+    console.log('Natural Image Size:', `${naturalWidth} x ${naturalHeight}`);
+    console.log('Rendered Size:', `${renderedWidth} x ${renderedHeight}`);
+    console.log('BoundingRect Size:', `${rect.width} x ${rect.height}`);
+    console.log('Click Position (relative to image):', `${clickX.toFixed(2)}, ${clickY.toFixed(2)}`);
+    console.log('Natural Coordinates:', `${naturalX.toFixed(2)}, ${naturalY.toFixed(2)}`);
+    console.log('Scaled to 1920x1080:', `${scaledX}, ${scaledY}`);
+    console.log('Scale Factors:', `X: ${(TARGET_WIDTH / naturalWidth).toFixed(4)}, Y: ${(TARGET_HEIGHT / naturalHeight).toFixed(4)}`);
+    console.groupEnd();
+
     const coordinateString = `${scaledX}, ${scaledY}`;
     
     // Copy to clipboard
