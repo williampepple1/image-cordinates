@@ -172,6 +172,7 @@ button:hover {
     background: linear-gradient(transparent, rgba(0,0,0,0.8));
     opacity: 0;
     transition: var(--transition);
+    pointer-events: none;
 }
 
 .image-card:hover .card-info {
