@@ -72,13 +72,17 @@ function handleImageClick(e) {
     const naturalWidth = img.naturalWidth;
     const naturalHeight = img.naturalHeight;
 
+    // Get the actual rendered dimensions of the image
+    const renderedWidth = img.offsetWidth;
+    const renderedHeight = img.offsetHeight;
+
     // Calculate click position within the displayed element (pixels)
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
 
     // First, convert click position to natural image coordinates
-    const naturalX = (clickX / rect.width) * naturalWidth;
-    const naturalY = (clickY / rect.height) * naturalHeight;
+    const naturalX = (clickX / renderedWidth) * naturalWidth;
+    const naturalY = (clickY / renderedHeight) * naturalHeight;
 
     // Then scale from natural dimensions to target resolution
     const scaledX = Math.round((naturalX / naturalWidth) * TARGET_WIDTH);
