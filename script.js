@@ -61,19 +61,28 @@ function renderImage(imageObj) {
 // --- Event Handlers ---
 
 function handleImageClick(e) {
-    const rect = e.target.getBoundingClientRect();
+    const img = e.target;
+    const rect = img.getBoundingClientRect();
     
     // Virtual resolution
     const TARGET_WIDTH = 1920;
     const TARGET_HEIGHT = 1080;
 
-    // Calculate click position within the element (pixels)
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    // Get natural image dimensions
+    const naturalWidth = img.naturalWidth;
+    const naturalHeight = img.naturalHeight;
 
-    // Scale to target resolution
-    const scaledX = Math.round((x / rect.width) * TARGET_WIDTH);
-    const scaledY = Math.round((y / rect.height) * TARGET_HEIGHT);
+    // Calculate click position within the displayed element (pixels)
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    // First, convert click position to natural image coordinates
+    const naturalX = (clickX / rect.width) * naturalWidth;
+    const naturalY = (clickY / rect.height) * naturalHeight;
+
+    // Then scale from natural dimensions to target resolution
+    const scaledX = Math.round((naturalX / naturalWidth) * TARGET_WIDTH);
+    const scaledY = Math.round((naturalY / naturalHeight) * TARGET_HEIGHT);
 
     const coordinateString = `${scaledX}, ${scaledY}`;
     
