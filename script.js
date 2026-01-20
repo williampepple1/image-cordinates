@@ -29,13 +29,61 @@ function clearDefaultIfPresent() {
 
 // --- Image Handling ---
 
-function addImage(src) {
-    const id = Date.now();
-    const imageObj = { id, src };
-    images.push(imageObj);
-    
-    renderImage(imageObj);
-    updateEmptyState();
+const TARGET_WIDTH = 1920;
+const TARGET_HEIGHT = 1080;
+
+/**
+ * Resizes an image to 1920x1080 using canvas
+ * @param {string} src - The source URL or data URL of the image
+ * @returns {Promise<string>} - A promise that resolves to the resized image data URL
+ */
+function resizeImage(src) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous'; // Allow cross-origin images
+        
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = TARGET_WIDTH;
+            canvas.height = TARGET_HEIGHT;
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Fill with black background (in case of transparent images)
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, TARGET_WIDTH, TARGET_HEIGHT);
+            
+            // Draw image stretched to fit exactly 1920x1080
+            ctx.drawImage(img, 0, 0, TARGET_WIDTH, TARGET_HEIGHT);
+            
+            // Convert to data URL
+            const resizedDataUrl = canvas.toDataURL('image/png');
+            resolve(resizedDataUrl);
+        };
+        
+        img.onerror = () => {
+            reject(new Error('Failed to load image for resizing'));
+        };
+        
+        img.src = src;
+    });
+}
+
+async function addImage(src) {
+    try {
+        // Resize the image to 1920x1080
+        const resizedSrc = await resizeImage(src);
+        
+        const id = Date.now();
+        const imageObj = { id, src: resizedSrc };
+        images.push(imageObj);
+        
+        renderImage(imageObj);
+        updateEmptyState();
+    } catch (error) {
+        console.error('Failed to resize image:', error);
+        showToast('Failed to load image. Check URL or try another image.');
+    }
 }
 
 function renderImage(imageObj) {
@@ -51,7 +99,7 @@ function renderImage(imageObj) {
 
     const info = document.createElement('div');
     info.className = 'card-info';
-    info.innerHTML = `<span>Click to copy 1920x1080 coordinates</span>`;
+    info.innerHTML = `<span>Resized to 1920x1080 • Click to copy coordinates</span>`;
 
     card.appendChild(img);
     card.appendChild(info);
@@ -63,14 +111,6 @@ function renderImage(imageObj) {
 function handleImageClick(e) {
     const img = e.target;
     const rect = img.getBoundingClientRect();
-    
-    // Virtual resolution
-    const TARGET_WIDTH = 1920;
-    const TARGET_HEIGHT = 1080;
-
-    // Get natural image dimensions
-    const naturalWidth = img.naturalWidth;
-    const naturalHeight = img.naturalHeight;
 
     // Get the actual rendered dimensions of the image
     const renderedWidth = img.offsetWidth;
@@ -80,30 +120,24 @@ function handleImageClick(e) {
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
 
-    // First, convert click position to natural image coordinates
-    const naturalX = (clickX / renderedWidth) * naturalWidth;
-    const naturalY = (clickY / renderedHeight) * naturalHeight;
-
-    // Then scale from natural dimensions to target resolution
-    const scaledX = Math.round((naturalX / naturalWidth) * TARGET_WIDTH);
-    const scaledY = Math.round((naturalY / naturalHeight) * TARGET_HEIGHT);
+    // Since images are always resized to 1920x1080, we just need to scale
+    // from rendered size to the actual 1920x1080 dimensions
+    const scaledX = Math.round((clickX / renderedWidth) * TARGET_WIDTH);
+    const scaledY = Math.round((clickY / renderedHeight) * TARGET_HEIGHT);
 
     // DEBUG LOGGING
     console.group('🎯 Coordinate Calculation Debug');
-    console.log('Natural Image Size:', `${naturalWidth} x ${naturalHeight}`);
+    console.log('Image Size (always):', `${TARGET_WIDTH} x ${TARGET_HEIGHT}`);
     console.log('Rendered Size:', `${renderedWidth} x ${renderedHeight}`);
-    console.log('BoundingRect Size:', `${rect.width} x ${rect.height}`);
     console.log('Click Position (relative to image):', `${clickX.toFixed(2)}, ${clickY.toFixed(2)}`);
-    console.log('Natural Coordinates:', `${naturalX.toFixed(2)}, ${naturalY.toFixed(2)}`);
-    console.log('Scaled to 1920x1080:', `${scaledX}, ${scaledY}`);
-    console.log('Scale Factors:', `X: ${(TARGET_WIDTH / naturalWidth).toFixed(4)}, Y: ${(TARGET_HEIGHT / naturalHeight).toFixed(4)}`);
+    console.log('Coordinates:', `${scaledX}, ${scaledY}`);
     console.groupEnd();
 
     const coordinateString = `${scaledX}, ${scaledY}`;
     
     // Copy to clipboard
     navigator.clipboard.writeText(coordinateString).then(() => {
-        showToast(`Copied: ${coordinateString} (1920x1080)`);
+        showToast(`Copied: ${coordinateString}`);
     }).catch(err => {
         console.error('Failed to copy: ', err);
     });
